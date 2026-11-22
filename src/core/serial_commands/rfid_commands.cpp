@@ -27,13 +27,19 @@ static RFIDInterface *_createRfidModule() {
         case PN532_I2C_SPI_MODULE: return new PN532(PN532::CONNECTION_TYPE::I2C_SPI);
 #endif
         case PN532_SPI_MODULE: return new PN532(PN532::CONNECTION_TYPE::SPI);
+#ifndef BB_PN532_ONLY
         case RC522_SPI_MODULE: return new RFID2(false);
+#endif
 #if !defined(LITE_VERSION)
         case ST25R3916_SPI_MODULE: return new ST25R3916(ST25R3916::SPI_MODE);
         case ST25R3916_I2C_MODULE: return new ST25R3916(ST25R3916::I2C_MODE);
 #endif
+#ifndef BB_PN532_ONLY
         case M5_RFID2_MODULE:
         default: return new RFID2();
+#else
+        default: return new PN532(PN532::CONNECTION_TYPE::I2C);
+#endif
     }
 }
 
