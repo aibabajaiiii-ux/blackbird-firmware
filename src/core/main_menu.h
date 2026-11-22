@@ -28,17 +28,25 @@ public:
     ConnectMenu connectMenu;
     ConfigMenu configMenu;
     FMMenu fmMenu;
+#ifndef BB_HIDE_UNUSED_MENUS
     GpsMenu gpsMenu;
+#endif
     IRMenu irMenu;
+#ifndef BB_HIDE_UNUSED_MENUS
     NRF24Menu nrf24Menu;
+#endif
     OthersMenu othersMenu;
     RFIDMenu rfidMenu;
+#ifndef BB_HIDE_UNUSED_MENUS
     RFMenu rfMenu;
+#endif
     ScriptsMenu scriptsMenu;
     WifiMenu wifiMenu;
-#if !defined(LITE_VERSION)
+#if !defined(LITE_VERSION) && !defined(BB_HIDE_UNUSED_MENUS)
     LoRaMenu loraMenu;
     EthernetMenu ethernetMenu;
+#endif
+#if !defined(LITE_VERSION)
     WireToolsMenu wireToolsMenu;
 #endif
 
