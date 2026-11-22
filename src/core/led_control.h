@@ -4,6 +4,16 @@
 
 #ifdef HAS_RGB_LED
 #include <Arduino.h>
+// globals.h (included above) drags in TFT_eSPI's ST7735_Defines.h, which
+// #defines plain RED/BLACK as 16-bit color constants (0xF800/0x0000).
+// FastLED 3.10.x's fl/rbtree.h declares `enum Color { RED, BLACK };` as
+// unqualified identifiers for its red-black tree node color, so without
+// undefining these first, the preprocessor mangles that enum into garbage
+// and the whole FastLED map/set template cascade fails to parse. Nothing
+// in this header (or led_control.cpp) uses the TFT RED/BLACK color
+// macros, so it's safe to drop them here, right before FastLED.h.
+#undef RED
+#undef BLACK
 #include <FastLED.h>
 
 #define LED_EFFECT_SOLID 0
