@@ -43,14 +43,17 @@ static void blackbirdMatrixRain(uint32_t durationMs) {
             int x = i * glyphW;
 
             // Erase the glyph that's about to scroll off the bottom of its trail.
+            // (tft_display only exposes drawString/drawCentreString publicly --
+            // TFT_eSPI::drawChar is a private base-class method -- so single
+            // glyphs are drawn as one-character strings instead.)
             tft.setTextColor(TFT_BLACK, TFT_BLACK);
-            tft.drawChar(random(0, 2) ? '1' : '0', x, colY[i] - glyphH, 1);
+            tft.drawString(random(0, 2) ? "1" : "0", x, colY[i] - glyphH, 1);
 
             // Draw a fresh glyph for this frame; brighter near the head of
             // the column to fake the "leading bright pixel" matrix look.
             bool isHead = true;
             tft.setTextColor(isHead ? TFT_GREEN : TFT_DARKGREEN, TFT_BLACK);
-            tft.drawChar(random(0, 2) ? '1' : '0', x, colY[i], 1);
+            tft.drawString(random(0, 2) ? "1" : "0", x, colY[i], 1);
 
             colY[i] += colSpeed[i];
             if (colY[i] > tftHeight + glyphH) {
