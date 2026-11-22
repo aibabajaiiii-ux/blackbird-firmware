@@ -16,7 +16,9 @@
 #include "ST25R3916.h"
 #endif
 #include "PN532.h"
+#ifndef BB_PN532_ONLY
 #include "RFID2.h"
+#endif
 
 #define NDEF_DATA_SIZE 100
 #define SCAN_DUMP_SIZE 5
@@ -66,13 +68,22 @@ void TagOMatic::set_rfid_module() {
         case PN532_I2C_SPI_MODULE: _rfid = new PN532(PN532::CONNECTION_TYPE::I2C_SPI); break;
 #endif
         case PN532_SPI_MODULE: _rfid = new PN532(PN532::CONNECTION_TYPE::SPI); break;
+#ifndef BB_PN532_ONLY
         case RC522_SPI_MODULE: _rfid = new RFID2(false); break;
+#endif
 #if !defined(LITE_VERSION)
         case ST25R3916_SPI_MODULE: _rfid = new ST25R3916(ST25R3916::SPI_MODE); break;
         case ST25R3916_I2C_MODULE: _rfid = new ST25R3916(ST25R3916::I2C_MODE); break;
 #endif
+#ifndef BB_PN532_ONLY
         case M5_RFID2_MODULE:
         default: _rfid = new RFID2(); break;
+#else
+        // Blackbird only has a PN532 (I2C) reader wired up -- fall back to it
+        // for any unrecognized/unsupported rfidModule setting instead of the
+        // M5Stack RFID2 (MFRC522) module we don't have.
+        default: _rfid = new PN532(PN532::CONNECTION_TYPE::I2C); break;
+#endif
     }
 }
 

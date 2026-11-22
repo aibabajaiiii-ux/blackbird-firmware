@@ -4,7 +4,9 @@
 #endif
 #include "core/sd_functions.h"
 #include "modules/rfid/PN532.h"
+#ifndef BB_PN532_ONLY
 #include "modules/rfid/RFID2.h"
+#endif
 #include "modules/rfid/RFIDInterface.h"
 #include <globals.h>
 
