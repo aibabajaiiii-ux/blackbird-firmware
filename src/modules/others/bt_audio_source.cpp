@@ -129,7 +129,7 @@ static void adcCaptureStart() {
     if (adc_continuous_config(adcHandle, &digCfg) != ESP_OK) return;
 
     adc_continuous_evt_cbs_t cbs = {.on_conv_done = adcConvDoneCb};
-    adc_continuous_register_event_callbacks(adcHandle, &cbs);
+    adc_continuous_register_event_callbacks(adcHandle, &cbs, nullptr);
 
     if (adc_continuous_start(adcHandle) == ESP_OK) adcRunning = true;
 }
