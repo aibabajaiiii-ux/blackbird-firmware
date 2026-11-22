@@ -1,0 +1,47 @@
+name: Build Blackbird firmware
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install PlatformIO
+        run: pip install -U platformio
+
+      - name: Build esp32-devkit-custom
+        run: pio run -e esp32-devkit-custom
+
+      - name: Show flash/RAM usage summary
+        if: always()
+        run: |
+          echo "---- Build output above has the Flash:/RAM: usage lines ----"
+
+      - name: Upload firmware binary
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: blackbird-firmware
+          path: |
+            .pio/build/esp32-devkit-custom/firmware.bin
+            .pio/build/esp32-devkit-custom/firmware.elf
+          if-no-files-found: warn
+
+      - name: Upload build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: .pio/build/esp32-devkit-custom/
+          if-no-files-found: ignore
